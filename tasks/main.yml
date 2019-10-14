@@ -1,0 +1,99 @@
+---
+- name: Install firewalld
+  package:
+    name: ["firewalld"]
+    state: present
+
+- name: Start firewalld
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: Configure open services
+  firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items: "{{ open_services }}"
+
+- name: Lock down cockpit service
+  firewalld:
+    zone: "{{ item }}"
+    service: "cockpit"
+    permanent: yes
+    state: disabled
+    immediate: yes
+  with_items:
+    - public
+    - home
+    - drop
+    - block
+    - internal
+    - work
+
+- name: Whitelist IPs
+  firewalld:
+    zone: trusted
+    permanent: yes
+    state: enabled
+    immediate: yes
+    source: "{{ item }}"
+  with_items: "{{ whitelisted_ips }}"
+
+- name: "Configure private network: 2378-2380/tcp"
+  firewalld:
+    source: "{{ private_network_subnet }}"
+    zone: internal
+    port: "2379-2380/tcp"
+    state: enabled
+    immediate: yes
+    permanent: yes
+
+- name: "Configure private network: 8472/udp"
+  firewalld:
+    source: "{{ private_network_subnet }}"
+    zone: internal
+    port: "8472/udp"
+    state: enabled
+    immediate: yes
+    permanent: yes
+
+- name: "Configure private network: 10250/tcp"
+  firewalld:
+    source: "{{ private_network_subnet }}"
+    zone: internal
+    port: "10250/tcp"
+    state: enabled
+    immediate: yes
+    permanent: yes
+
+- name: "Configure private network: 10254/tcp"
+  firewalld:
+    source: "{{ private_network_subnet }}"
+    zone: internal
+    port: "10254/tcp"
+    state: enabled
+    immediate: yes
+    permanent: yes
+
+- name: "Configure private network: 6443/tcp"
+  firewalld:
+    source: "{{ private_network_subnet }}"
+    zone: internal
+    port: "6443/tcp"
+    state: enabled
+    immediate: yes
+    permanent: yes
+
+
+- name: "Configure private network: 9796/tcp"
+  firewalld:
+    source: "{{ private_network_subnet }}"
+    zone: internal
+    port: "9796/tcp"
+    state: enabled
+    immediate: yes
+    permanent: yes
+
