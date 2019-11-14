@@ -42,9 +42,17 @@
     source: "{{ item }}"
   with_items: "{{ whitelisted_ips }}"
 
-- name: "Configure private network: 2378-2380/tcp"
+
+- name: "Configure private network subnet"
   firewalld:
     source: "{{ private_network_subnet }}"
+    zone: internal
+    state: enabled
+    immediate: yes
+    permanent: yes
+
+- name: "Configure private network: 2378-2380/tcp"
+  firewalld:
     zone: internal
     port: "2379-2380/tcp"
     state: enabled
@@ -53,7 +61,6 @@
 
 - name: "Configure private network: 8472/udp"
   firewalld:
-    source: "{{ private_network_subnet }}"
     zone: internal
     port: "8472/udp"
     state: enabled
@@ -62,7 +69,6 @@
 
 - name: "Configure private network: 10250/tcp"
   firewalld:
-    source: "{{ private_network_subnet }}"
     zone: internal
     port: "10250/tcp"
     state: enabled
@@ -71,7 +77,6 @@
 
 - name: "Configure private network: 10254/tcp"
   firewalld:
-    source: "{{ private_network_subnet }}"
     zone: internal
     port: "10254/tcp"
     state: enabled
@@ -80,7 +85,6 @@
 
 - name: "Configure private network: 6443/tcp"
   firewalld:
-    source: "{{ private_network_subnet }}"
     zone: internal
     port: "6443/tcp"
     state: enabled
@@ -90,7 +94,6 @@
 
 - name: "Configure private network: 9796/tcp"
   firewalld:
-    source: "{{ private_network_subnet }}"
     zone: internal
     port: "9796/tcp"
     state: enabled
